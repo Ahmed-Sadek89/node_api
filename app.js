@@ -18,6 +18,17 @@ dotEnv.config();
 app.use(express.json());
 app.use(cors())
 
+if (process.env.NODE_ENV === 'production') {
+    app.use('/', express.static('Public'));
+    app.get('/', (req, res) => {
+        res.sendFile(__dirname+'/Public/index.html')
+    })
+} else {
+    app.get('/', (req, res) => {
+        res.send('NODE_ENV !== production')
+    })
+}
+
 // server & DB connections
 mongoose.connect(process.env.DB_URL)
 .then(() => {
